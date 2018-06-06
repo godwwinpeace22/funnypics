@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Image = require('../models/image')
 const dotenv = require('dotenv').config();
 const cloudinary = require('cloudinary');
 const multer = require('multer');
@@ -38,16 +39,21 @@ router.get('/', function(req, res, next) {
 
 router.post('/', upload.array('src'), async (req,res,next)=>{
   console.log(req.files);
-  let images = req.files
-  images.forEach(image => {
-    var addDoc = db.collection('cities').add({
-      src:image.secure_url,
-      size:{width:image.width,height:image.height}
-    }).then(ref => {
-      console.log('Added document with ID: ', ref.id);
-      //res.send(ref)
+  let imgs = []
+  let docs = req.files
+  docs.forEach(doc => {
+    let image = new Image({
+      src:doc.secure_url,
+      data:{
+        width:doc.width,
+        height:doc.height
+      }
     });
+    await image.save()
+    console.log(image);
+    imgs.push(image)
   });
+  res.send(imgs)
 })
 
 module.exports = router;

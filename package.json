@@ -18,6 +18,8 @@
     "firebase-admin": "^5.12.1",
     "helmet": "^3.12.0",
     "moment": "*",
+    "mongodb": "^3.0.10",
+    "mongoose": "^5.1.4",
     "morgan": "~1.9.0",
     "multer": "*",
     "multer-storage-cloudinary": "^2.2.1",
