@@ -24,36 +24,33 @@ filename: function (req, file, cb) {
 
 let upload = multer({ storage: storage });
 
-// Initailize cloud firestore
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://newproject-72f76.firebaseio.com"
-});
-
-var db = admin.firestore();
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Sonrisa' });
 });
 
 router.post('/', upload.array('src'), async (req,res,next)=>{
-  console.log(req.files);
-  let imgs = []
-  let docs = req.files
-  docs.forEach(doc => {
-    let image = new Image({
-      src:doc.secure_url,
-      data:{
-        width:doc.width,
-        height:doc.height
-      }
+  try {
+    console.log(req.files);
+    let imgs = []
+    let docs = req.files
+    docs.forEach(async doc => {
+      let image = new Image({
+        src:doc.secure_url,
+        data:{
+          width:doc.width,
+          height:doc.height
+        }
+      });
+      await image.save();
+      imgs.push(image)
+      console.log(image);
     });
-    await image.save()
-    console.log(image);
-    imgs.push(image)
-  });
-  res.send(imgs)
-})
+    res.send('Images uploaded successfully');
+  } catch (error) {
+    console.log(error);
+  }
+  
+});
 
 module.exports = router;
