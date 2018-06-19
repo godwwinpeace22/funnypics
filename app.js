@@ -2,11 +2,14 @@ const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
+const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
 const dotenv = require('dotenv').config();
 const mongoose = require('mongoose');
 const mongoDB = process.env.database;
+const cors = require('cors');
 mongoose.connect(mongoDB);
 db = mongoose.connection;
 //bind connecton to error event(to get notification of connection errors)
@@ -20,16 +23,24 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// Allow cross-origin resource sharing
+app.use(cors());
 app.use(cookieParser());
+app.use(expressValidator());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', index);
 app.use('/users', users);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

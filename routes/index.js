@@ -31,8 +31,6 @@ router.get('/', function(req, res, next) {
 
 router.post('/', upload.array('src'), async (req,res,next)=>{
   try {
-    console.log(req.files);
-    let imgs = []
     let docs = req.files
     docs.forEach(async doc => {
       let image = new Image({
@@ -43,14 +41,17 @@ router.post('/', upload.array('src'), async (req,res,next)=>{
         }
       });
       await image.save();
-      imgs.push(image)
       console.log(image);
     });
     res.send('Images uploaded successfully');
   } catch (error) {
     console.log(error);
   }
-  
 });
 
+// Client-side request
+router.get('/images/:offset', async (req,res,next)=>{
+  someFiles = await Image.find().skip(1 * req.params.offset).limit(4);
+  res.send(someFiles)
+})
 module.exports = router;
