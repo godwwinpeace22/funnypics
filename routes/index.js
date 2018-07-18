@@ -51,7 +51,7 @@ router.post('/', upload.array('src'), async (req,res,next)=>{
 
 // Client-side request
 router.get('/images/:offset', async (req,res,next)=>{
-  someFiles = await Image.find().skip(1 * req.params.offset).limit(4);
+  someFiles = await Image.find().skip(1 * req.params.offset).limit(12);
   res.send(someFiles)
 })
 module.exports = router;
