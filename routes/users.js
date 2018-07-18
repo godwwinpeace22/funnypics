@@ -33,7 +33,7 @@ router.post('/register', async (req,res,next)=>{
     
     //if there are errors in the form
     if(errors){
-      res.status(500).send(errors)
+      res.status(500).send('There were error in the form')
     }
     //there are no errors
     else{
