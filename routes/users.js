@@ -25,7 +25,8 @@ router.post('/register', async (req,res,next)=>{
     //create a new user
     let user = new User({
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
+      likes:[]
     });
 
     //Run the validators

@@ -8,5 +8,5 @@ module.exports = mongoose.model('User', new Schema({
         type:String,
         bcrypt: true
     },
-    likes:Array
+    likes:[{type:Schema.Types.ObjectId, ref:'Article'}]
 }))
