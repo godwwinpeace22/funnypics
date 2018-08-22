@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Image = require('../models/image');
+const Riddle = require('../models/riddle');
+const Pun = require('../models/pun');
 const User = require('../models/user');
 const dotenv = require('dotenv').config();
 const cloudinary = require('cloudinary');
@@ -30,7 +32,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Sonrisa' });
 });
 
-router.post('/', upload.array('src'), async (req,res,next)=>{
+router.post('/upload/images', upload.array('src'), async (req,res,next)=>{
   try {
     let docs = req.files
     docs.forEach(async doc => {
@@ -46,16 +48,60 @@ router.post('/', upload.array('src'), async (req,res,next)=>{
       await image.save();
       console.log(image);
     });
-    res.send('Images uploaded successfully');
+    res.redirect('/');
   } catch (error) {
     console.log(error);
   }
 });
 
+router.post('/upload/riddles', async (req,res,next)=>{
+  try{
+    // Validate request here
+    let riddle = new Riddle({
+      title:req.body.title,
+      question:req.body.question,
+      answer:req.body.answer,
+      created_at:Date.now()
+    });
+    await riddle.save();
+    res.redirect('/');
+  }
+  catch(err){
+    console.log(err);
+  }
+})
+router.post('/upload/puns', async (req,res,next)=>{
+  try{
+    // Validate request here
+    let pun = new Pun({
+      content:req.body.content,
+      created_at:Date.now()
+    });
+    await pun.save();
+    res.redirect('/');
+  }
+  catch(err){
+    console.log(err);
+  }
+})
+
 // Client-side request for images
 router.get('/images/:offset', async (req,res,next)=>{
-  someFiles = await Image.find().skip(1 * req.params.offset).limit(20);
+  let someFiles = await Image.find().skip(1 * req.params.offset).limit(20);
   res.send(someFiles)
+});
+
+// Client-side request for riddles
+router.get('/riddles', async (req,res,next)=>{
+  let riddles = await Riddle.find();
+  console.log(riddles);
+  res.send(riddles)
+})
+// Client-side request for puns
+router.get('/puns', async (req,res,next)=>{
+  let pun = await Pun.find();
+  console.log(pun);
+  res.send(pun);
 })
 
 // client-side request to like or unlike images
@@ -89,7 +135,7 @@ router.post('/images/like/:userId/:imgId/:action', async (req,res,next)=>{
         break;
     }
   } catch (error) {
-    throw error
+    res.send(501,{msg:'something went wrong'});
   }
   
 })

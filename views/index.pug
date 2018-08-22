@@ -5,6 +5,22 @@ block content
   
   .upload
     h3 Upload Images
-    form(action="" method="POST" enctype='multipart/form-data')
+    form(action="/upload/images" method="POST" enctype='multipart/form-data')
       input(type="file" accept='image/*' name='src' multiple)
       button(type='submit') Upload image
+  .riddles
+    h3 Upload Riddles
+    form(action="/upload/riddles" method="POST")
+      input(type="text" name='title' placeholder="Riddle title" required)
+      br
+      input(type="text" name='question' placeholder='the riddle' required)
+      br
+      input(type="text" name='answer' placeholder='the answer' required)
+      br
+      button(type='submit') Upload riddle
+  .puns
+    h3 Upload Pun
+    form(action="/upload/puns" method="POST")
+      input(type="text" name='content' placeholder="Pun content" required)
+      br
+      button(type='submit') Upload pun
